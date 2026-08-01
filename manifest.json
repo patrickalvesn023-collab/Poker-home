@@ -2,7 +2,7 @@
   "name": "Home Game Poker",
   "short_name": "Poker OFC",
   "description": "Temporizador e gerenciamento de blinds para partidas de poker em home games.",
-  "start_url": "Poker.html",
+  "start_url": "index.html",
   "scope": "./",
   "display": "standalone",
   "orientation": "portrait",
