@@ -1,6 +1,6 @@
 const CACHE_NAME = 'poker-ofc-cache-v1';
 const FILES_TO_CACHE = [
-  'Poker.html',
+  'index.html',
   'index.html',
   'styles.css',
   'app.js',
