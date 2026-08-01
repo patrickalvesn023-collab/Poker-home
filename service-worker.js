@@ -63,7 +63,7 @@ self.addEventListener('fetch', (event) => {
         })
         .catch(() => {
           if (event.request.mode === 'navigate') {
-            return caches.match('Poker.html').then((cachedResponse) => {
+            return caches.match('index.html').then((cachedResponse) => {
               return cachedResponse || caches.match('index.html');
             });
           }
