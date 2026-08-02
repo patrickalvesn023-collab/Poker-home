@@ -675,9 +675,9 @@ function renderBlindsConfig() {
           </button>
         </div>
         <div class="blind-fields">
-          <div><label>SB</label>  <input type="number" value="${b.sb}" onchange="updateBlind(${i},'sb',this.value)"></div>
-          <div><label>BB</label>  <input type="number" value="${b.bb}" onchange="updateBlind(${i},'bb',this.value)"></div>
-          <div><label>ANTE</label><input type="number" value="${b.bb}" readonly id="ante-${i}"></div>
+          <div><label>SB</label>  <input type="number" value="${b.sb}" oninput="updateBlind(${i},'sb',this.value,false)" onchange="updateBlind(${i},'sb',this.value,true)"></div>
+          <div><label>BB</label>  <input type="number" value="${b.bb}" oninput="updateBlind(${i},'bb',this.value,false)" onchange="updateBlind(${i},'bb',this.value,true)"></div>
+          <div><label>ANTE</label><input type="number" value="${b.ante ?? 0}" oninput="updateBlind(${i},'ante',this.value,false)" onchange="updateBlind(${i},'ante',this.value,true)"></div>
         </div>
         <div class="blind-fields" style="grid-template-columns:1fr; margin-top:8px;">
           <div><label>Mensagem do Nível</label><input type="text" value="${b.note || ""}" onchange="updateBlind(${i},'note',this.value)"></div>
@@ -742,15 +742,23 @@ function handleBlindDragEnd() {
   dragSrcIndex = null;
 }
 
-function updateBlind(i, key, val) {
+function updateBlind(i, key, val, rerender = true) {
   if (key === "rebuyEnd") state.blinds[i][key] = val;
   else if (key === "note") state.blinds[i][key] = val;
-  else if (key === "bb") {
-    const parsed = parseInt(val) || 0;
-    state.blinds[i].bb = parsed;
-    state.blinds[i].ante = parsed;
-  } else state.blinds[i][key] = parseInt(val) || 0;
-  renderBlindsConfig();
+  else if (key === "ante") {
+    state.blinds[i].ante = parseInt(val) || 0;
+  } else if (key === "bb") {
+    state.blinds[i].bb = parseInt(val) || 0;
+  } else {
+    state.blinds[i][key] = parseInt(val) || 0;
+  }
+
+  if (rerender) {
+    renderBlindsConfig();
+  }
+
+  updateMesaUI();
+  saveState();
   autosave();
 }
 
@@ -761,7 +769,7 @@ function addBlind() {
   state.blinds.push({
     sb: last.sb * 2,
     bb: newBB,
-    ante: newBB,
+    ante: 0,
     note: "",
     rebuyEnd: false,
   });
@@ -1338,11 +1346,20 @@ function init() {
   renderPlayers();
   updateMesaUI();
   startLevel();
+  window.dispatchEvent(new Event("poker-app-ready"));
 }
 
 window.addEventListener("load", init);
 
-if ("serviceWorker" in navigator) {
+function shouldRegisterServiceWorker() {
+  const hostname = window.location.hostname;
+  const isLocalHost = ["", "localhost", "127.0.0.1", "::1"].includes(hostname);
+  const isSecureContext =
+    window.location.protocol === "https:" || window.location.protocol === "http:";
+  return !isLocalHost && isSecureContext && "serviceWorker" in navigator;
+}
+
+if (shouldRegisterServiceWorker()) {
   window.addEventListener("load", () => {
     navigator.serviceWorker
       .register("service-worker.js")
