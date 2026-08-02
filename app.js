@@ -118,13 +118,13 @@ function getNextRebuyEndLevelIndex() {
 }
 
 function isLastRoundBeforeRebuyEnd() {
-  const nextEndIndex = getNextRebuyEndLevelIndex();
-  if (nextEndIndex === -1) return false;
+  const firstEndIndex = getFirstRebuyEndLevelIndex();
+  if (firstEndIndex === -1) return false;
   
   const currentIndex = state.currentLevel;
-  if (currentIndex >= nextEndIndex) return false;
+  if (currentIndex >= firstEndIndex) return false;
   
-  let prev = nextEndIndex - 1;
+  let prev = firstEndIndex - 1;
   while (
     prev >= 0 &&
     state.blinds[prev] &&
