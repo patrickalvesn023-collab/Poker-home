@@ -52,6 +52,8 @@ const SOUND_CHAMP = [
   { id: "chime", label: "Sino" },
 ];
 
+const APP_VERSION = "20260802-4";
+
 const state = {
   levelTime: 15,
   blinds: JSON.parse(JSON.stringify(DEFAULT_BLINDS)),
@@ -84,14 +86,17 @@ const state = {
 };
 
 function saveState() {
-  localStorage.setItem("pokerState", JSON.stringify(state));
+  try {
+    localStorage.removeItem("pokerAppVersion");
+    localStorage.removeItem("pokerState");
+  } catch (error) {}
 }
 
 function loadState() {
-  const saved = localStorage.getItem("pokerState");
-  if (!saved) return;
-  const parsed = JSON.parse(saved);
-  Object.assign(state, parsed);
+  try {
+    localStorage.removeItem("pokerAppVersion");
+    localStorage.removeItem("pokerState");
+  } catch (error) {}
 }
 
 function autosave() {
@@ -109,8 +114,8 @@ function isRebuyEnded() {
   return false;
 }
 
-function getNextRebuyEndLevelIndex() {
-  for (let i = state.currentLevel + 1; i < state.blinds.length; i++) {
+function getFirstRebuyEndLevelIndex() {
+  for (let i = 0; i < state.blinds.length; i++) {
     const b = state.blinds[i];
     if (b && b.type !== "interval" && b.rebuyEnd) return i;
   }
@@ -120,10 +125,10 @@ function getNextRebuyEndLevelIndex() {
 function isLastRoundBeforeRebuyEnd() {
   const firstEndIndex = getFirstRebuyEndLevelIndex();
   if (firstEndIndex === -1) return false;
-  
+
   const currentIndex = state.currentLevel;
   if (currentIndex >= firstEndIndex) return false;
-  
+
   let prev = firstEndIndex - 1;
   while (
     prev >= 0 &&
@@ -132,7 +137,7 @@ function isLastRoundBeforeRebuyEnd() {
   ) {
     prev -= 1;
   }
-  
+
   return prev === currentIndex;
 }
 
@@ -1342,6 +1347,14 @@ function bindGlobals() {
 }
 
 function init() {
+  try {
+    const url = new URL(window.location.href);
+    if (url.searchParams.get("reset") === "1") {
+      localStorage.removeItem("pokerState");
+      localStorage.removeItem("pokerAppVersion");
+    }
+  } catch (error) {}
+
   loadState();
   bindGlobals();
   renderBlindsConfig();
