@@ -370,14 +370,15 @@ function openCtxMenu(e, name, rebuyEnded) {
   const st = state.playerStatus[name] || "active";
   const m = document.getElementById("ctx-menu");
 
+  const canEliminate = st === "active" || st === "rebought";
   document.getElementById("ctx-champion").style.display =
     st === "active" ? "flex" : "none";
   document.getElementById("ctx-eliminate").style.display =
-    st === "active" ? "flex" : "none";
+    canEliminate ? "flex" : "none";
   document.getElementById("ctx-rebuy").style.display =
     st === "eliminated" && !rebuyEnded ? "flex" : "none";
   document.getElementById("ctx-restore").style.display =
-    st !== "active" ? "flex" : "none";
+    st !== "active" && st !== "rebought" ? "flex" : "none";
 
   m.style.left = Math.min(e.clientX, window.innerWidth - 180) + "px";
   m.style.top = Math.min(e.clientY - 20, window.innerHeight - 180) + "px";
