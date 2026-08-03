@@ -87,16 +87,30 @@ const state = {
 
 function saveState() {
   try {
-    localStorage.removeItem("pokerAppVersion");
-    localStorage.removeItem("pokerState");
-  } catch (error) {}
+    localStorage.setItem("pokerAppVersion", APP_VERSION);
+    localStorage.setItem("pokerState", JSON.stringify(state));
+  } catch (error) {
+    console.error("Erro ao salvar:", error);
+  }
 }
 
 function loadState() {
   try {
-    localStorage.removeItem("pokerAppVersion");
-    localStorage.removeItem("pokerState");
-  } catch (error) {}
+    const savedVersion = localStorage.getItem("pokerAppVersion");
+    const savedState = localStorage.getItem("pokerState");
+
+    if (!savedState) return;
+
+    // Se mudar a versão, você pode decidir manter ou limpar.
+    // Por enquanto vamos apenas carregar normalmente.
+
+    const parsed = JSON.parse(savedState);
+
+    Object.assign(state, parsed);
+
+  } catch (error) {
+    console.error("Erro ao carregar:", error);
+  }
 }
 
 function autosave() {
@@ -1347,15 +1361,7 @@ function bindGlobals() {
 }
 
 function init() {
-  try {
-    const url = new URL(window.location.href);
-    if (url.searchParams.get("reset") === "1") {
-      localStorage.removeItem("pokerState");
-      localStorage.removeItem("pokerAppVersion");
-    }
-  } catch (error) {}
-
-  loadState();
+ loadState();
   bindGlobals();
   renderBlindsConfig();
   renderPlayersConfig();
@@ -1365,7 +1371,6 @@ function init() {
   renderPlayers();
   updateMesaUI();
   startLevel();
-  window.dispatchEvent(new Event("poker-app-ready"));
 }
 
 window.addEventListener("load", init);
