@@ -9,11 +9,11 @@ const DEFAULT_BLINDS = [
   { sb: 50, bb: 100, ante: 10, note: "", rebuyEnd: false },
   { type: "interval" },
   { sb: 100, bb: 200, ante: 25, note: "", rebuyEnd: true },
-  { sb: 200, bb: 400, ante: 50, note: "", rebuyEnd: true },
-  { sb: 500, bb: 1000, ante: 100, note: "", rebuyEnd: true },
-  { sb: 1000, bb: 2000, ante: 200, note: "", rebuyEnd: true },
-  { sb: 2000, bb: 4000, ante: 500, note: "", rebuyEnd: true },
-  { sb: 4000, bb: 8000, ante: 800, note: "", rebuyEnd: true },
+  { sb: 200, bb: 400, ante: 50, note: "", rebuyEnd: false },
+  { sb: 500, bb: 1000, ante: 100, note: "", rebuyEnd: false },
+  { sb: 1000, bb: 2000, ante: 200, note: "", rebuyEnd: false },
+  { sb: 2000, bb: 4000, ante: 500, note: "", rebuyEnd: false },
+  { sb: 4000, bb: 8000, ante: 800, note: "", rebuyEnd: false },
 ];
 
 const BASE_RATIOS = {
