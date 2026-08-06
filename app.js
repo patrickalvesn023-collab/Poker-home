@@ -1251,32 +1251,6 @@ function runChipTest(playersCount, target) {
   renderTestResults(result);
 }
 
-function renderTestResults(r) {
-  const out = document.getElementById("test-results");
-  if (!out) return;
-  const chips = state.chips;
-  let html = `<div style="padding:10px;background:var(--bg2);border:1px solid var(--border);border-radius:8px;">
-          <div style="font-weight:600;color:var(--gold);margin-bottom:6px;">Teste — ${r.players} jogador(es) · alvo ${r.target.toLocaleString("pt-BR")}</div>
-          <div style="margin-bottom:6px;">Stack real / jogador: <strong style="color:var(--gold)">${r.perPlayerTotal.toLocaleString("pt-BR")}</strong> · Fichas por jogador: <strong style="color:var(--text)">${r.perPlayerCount}</strong></div>
-          <div style="margin-bottom:8px;color:var(--text-dim)">Distribuição:</div>
-          <div style="max-height:200px;overflow:auto;margin-bottom:8px;"><table style="width:100%;border-collapse:collapse;"><thead><tr style="color:var(--text-muted);font-size:12px;text-align:left"><th>FICHA</th><th>P/J</th><th>USADAS</th><th>RESERVA</th></tr></thead><tbody>`;
-
-  chips.forEach((c, i) => {
-    const pp = state.chipPerPlayer[i] || 0;
-    const used = r.usedPerChip[i] || 0;
-    const reserva = (c.total || 0) - used;
-    html += `<tr style="border-top:1px solid var(--border);"><td style="padding:6px 4px;">${c.name} (${c.value})</td><td style="padding:6px 4px;">${pp}</td><td style="padding:6px 4px;">${used}</td><td style="padding:6px 4px;">${reserva}</td></tr>`;
-  });
-
-  html += `</tbody></table></div>
-          <div style="color:var(--text-dim);">Total usado (valor): <strong style="color:var(--gold)">${r.usedTotalValue.toLocaleString("pt-BR")}</strong></div>
-          <div style="color:var(--text-dim);">Reserva total (valor): <strong style="color:var(--gold)">${r.reserveTotalValue.toLocaleString("pt-BR")}</strong></div>
-          <div style="color:var(--text-dim);">Retornos completos possíveis: <strong style="color:var(--gold)">${r.fullReturns} / ${r.players}</strong></div>
-        </div>`;
-
-  out.innerHTML = html;
-}
-
 function showPage(name, btn) {
   document
     .querySelectorAll(".page")
